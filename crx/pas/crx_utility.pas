@@ -14,7 +14,8 @@ uses
 
 	function crx_utility_enforcePathAsDirectoryPath(pPath : CrxString) : CrxString;
 	function crx_utility_getLastIndexOf(pAnsiChar : AnsiChar; pCrxString : CrxString;
-			pDefault : Integer) : Integer;	
+			pDefault : Integer) : Integer;
+	function crx_utility_doesStringBeginsWith(pCrxString : CrxString; pSearch : CrxString) : Boolean;	
 {$ENDREGION}
 
 
@@ -28,7 +29,7 @@ implementation
 		vPath := crx_makeCrxStringFrom(sysutils.Trim(pPath));
 		
 		if((crx_getLengthOf(vPath) = 0) or 
-				(vPath[crx_getLengthOf(vPath) - 1] <> System.DirectorySeparator)) then begin
+				(vPath[crx_getLengthOf(vPath)] <> System.DirectorySeparator)) then begin
 			crx_appendTo(vPath, System.DirectorySeparator);
 			result := vPath; exit;
 			end
@@ -58,6 +59,23 @@ implementation
 		end;
 
 		result := tReturn; exit;
+	end;
+	{NOTE: IMPLEMENTAION IS CURRENTLY ILL DEFINED. DEFAULT CAN BE RETURNED IF OUT OF RANGE.}
+	function crx_utility_doesStringBeginsWith(pCrxString : CrxString; pSearch : CrxString) : Boolean;
+		var {block} tI : size_t = 0;
+
+		begin
+		if(crx_getLengthOf(pSearch) > crx_getLengthOf(pCrxString)) then begin
+			result := false; exit;
+		end else begin
+			for {var} tI := 1 to crx_getLengthOf(pSearch) do begin
+				if(pCrxString[tI] <> pSearch[tI]) then begin
+					result := false; exit;
+				end;
+			end;
+
+			result := true; exit;
+		end;		
 	end;
 {$ENDREGION}
 
